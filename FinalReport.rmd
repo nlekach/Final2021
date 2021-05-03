@@ -16,9 +16,64 @@ require(forcats)
 OldData <-read.csv(file="covid91.csv",header=TRUE)
 #recode to remove the annoying "X" from the dataframe
 FinalData <- OldData %>% mutate(infected = recode(infected, aids = "covid", none = "OK" )) %>% select(-one_of("X"))
+FinalData$treatment <-as.factor(FinalData$treatment)
+FinalData$sex <-as.factor(FinalData$sex)
+FinalData$infected <-as.factor(FinalData$infected)
+FinalData$LGBTQ <-as.factor(FinalData$LGBTQ)
+FinalData$DrugUser <-as.factor(FinalData$DrugUser)
+FinalData$treatment<-relevel(FinalData$treatment,ref="placebo")
 ```
 
 # Introduction
 
 A new  preventative vaccine (covid91) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups consisting of Males, Females, just the drug users, and just those in the LGBTQ community. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
+
+```{r}
+barchartGC(~infected + treatment,data=FinalData, main="COVID infections by treatment type",xlab="Infection")
+barchartGC(~infected + treatment,data=FinalData, type="percent",main="Percent COVID Infections by treatment type", xlab="Infection")
+
+```
+Overall, most of the study patients did not get COVID. Of those that were diagnosed with COVID, a greater percent of them received the placebo. Of those that were not diagnosed with COVID, a slightly larger percent of them received the placebo.
+
+```{r}
+OverallTable <- xtabs(~infected + treatment, data=FinalData)
+rowPerc(OverallTable)
+colPerc(OverallTable)
+```
+Of the study patients who were diagnosed with COVID, 58% of them received the placebo and 42% received the vaccine drug. Of those that were not diagnosed with COVID, 51% received the placebo and 49% received the vaccine drug.
+
+# Effectivness for Males
+
+## Methods
+```{r}
+Males<-filter(FinalData,sex=="guy")
+Females<-filter(FinalData,sex=="gal")
+Gay<-filter(FinalData,LGBTQ=="gay")
+UserDrugs<-filter(FinalData,DrugUser=="yes")
+```
+
+## Results
+
+### Graphical Descriptive Results
+
+```{r}
+barchartGC(~infected + treatment,data=Males, main= "COVID Infections of males by treatment type", xlab="Infection")
+barchartGC(~infected + treatment,data=Males, type="percent", main="Percent COVID Infections of males by treatment type", xlab="Infection")
+```
+Of males that were diagnosed with COVID, more of them took the vaccine. Of the males that were not diagnosed with COVID, a slightly larger amount took the placebo.  
+  
+```{r}
+barchartGC(~infected + treatment,data=Females,main="COVID Infections of females by treatment type", xlab="Infection")
+barchartGC(~infected + treatment,data=Females, type="percent", main="Percent COVID Infections of females by treatment type", xlab="Infection")
+
+```
+Of the females that were diagnosed with COVID, about two times as many of of them received the placebo. Of the females that weren't diagnosed with COVID, almost half received the placebo and half received the vaccine.
+
+### Numerical Descriptive Results
+
+
+
+### Inferential Results
+
+## Conclusion and Discussion
 
