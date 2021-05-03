@@ -28,29 +28,42 @@ FinalData$treatment<-relevel(FinalData$treatment,ref="placebo")
 
 A new  preventative vaccine (covid91) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups consisting of Males, Females, just the drug users, and just those in the LGBTQ community. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
 
-```{r}
-barchartGC(~infected + treatment,data=FinalData, main="COVID infections by treatment type",xlab="Infection")
-barchartGC(~infected + treatment,data=FinalData, type="percent",main="Percent COVID Infections by treatment type", xlab="Infection")
+# Methods
 
-```
-Overall, most of the study patients did not get COVID. Of those that were diagnosed with COVID, a greater percent of them received the placebo. Of those that were not diagnosed with COVID, a slightly larger percent of them received the placebo.
-
-```{r}
-OverallTable <- xtabs(~infected + treatment, data=FinalData)
-rowPerc(OverallTable)
-colPerc(OverallTable)
-```
-Of the study patients who were diagnosed with COVID, 58% of them received the placebo and 42% received the vaccine drug. Of those that were not diagnosed with COVID, 51% received the placebo and 49% received the vaccine drug.
-
-# Effectivness for Males
-
-## Methods
 ```{r}
 Males<-filter(FinalData,sex=="guy")
 Females<-filter(FinalData,sex=="gal")
 Gay<-filter(FinalData,LGBTQ=="gay")
 UserDrugs<-filter(FinalData,DrugUser=="yes")
 ```
+
+# Overall Effectiveness 
+```{r}
+barchartGC(~infected + treatment,data=FinalData, main="COVID infections by treatment type",xlab="Infection")
+barchartGC(~infected + treatment,data=FinalData, type="percent",main="Percent COVID Infections by treatment type", xlab="Infection")
+
+```
+  
+Overall, most of the study patients did not get COVID. Of those that were diagnosed with COVID, a greater percent of them received the placebo. Of those that were not diagnosed with COVID, a slightly larger percent of them received the placebo.  
+
+```{r}
+OverallTable <- xtabs(~infected + treatment, data=FinalData)
+rowPerc(OverallTable)
+colPerc(OverallTable)
+```
+  
+Of the study patients who were diagnosed with COVID, 58% of them received the placebo and 42% received the vaccine drug. Of those that were not diagnosed with COVID, 51% received the placebo and 49% received the vaccine drug.
+  
+```{r}
+chisq.test(OverallTable)
+chisqtestGC(OverallTable)
+fisher.test(OverallTable)
+```
+  
+Due to the small amount of participants who were diagnosed with COVID, the Fisher Exact Test is a better statistical test to interpret for this study. With a small p-value of 0.00001223, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between those those who receive the treatment and those that receive the placebo. The odds of getting COVID is 1.3418 times greater for those that received the placebo rather than the vaccine.
+Overall, this drug is between 53.99% and 60.56% effective.
+  
+# Effectivness for Males
 
 ## Results
 
@@ -60,20 +73,36 @@ UserDrugs<-filter(FinalData,DrugUser=="yes")
 barchartGC(~infected + treatment,data=Males, main= "COVID Infections of males by treatment type", xlab="Infection")
 barchartGC(~infected + treatment,data=Males, type="percent", main="Percent COVID Infections of males by treatment type", xlab="Infection")
 ```
-Of males that were diagnosed with COVID, more of them took the vaccine. Of the males that were not diagnosed with COVID, a slightly larger amount took the placebo.  
   
+Of males that were diagnosed with COVID, more of them took the vaccine. Of the males that were not diagnosed with COVID, a slightly larger amount took the placebo.  
+    
+### Numerical Descriptive Results
+
+```{r}
+MaleTable <- xtabs(~infected + treatment, data=Males)
+rowPerc(MaleTable)
+colPerc(MaleTable)
+```
+  
+Of males that were diagnosed with COVID, 58% of them took the vaccine. Of the males that were not diagnosed with COVID,  51.5% took the placebo and 48.5% took the vaccine. 
+    
+### Inferential Results
+
+```{r}
+chisq.test(MaleTable)
+chisqtestGC(MaleTable)
+fisher.test(MaleTable)
+```
+  
+With a small p-value of 0.0005, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between those those who receive the treatment and those that receive the placebo. The odds of males getting COVID is 0.678 times greater for those that received the placebo rather than the vaccine. 
+Overall, this drug is between 35.09% and 45.94% effective for males. This drug is less effective for males than for males and females combined.
+  
+## Females
 ```{r}
 barchartGC(~infected + treatment,data=Females,main="COVID Infections of females by treatment type", xlab="Infection")
 barchartGC(~infected + treatment,data=Females, type="percent", main="Percent COVID Infections of females by treatment type", xlab="Infection")
 
 ```
 Of the females that were diagnosed with COVID, about two times as many of of them received the placebo. Of the females that weren't diagnosed with COVID, almost half received the placebo and half received the vaccine.
-
-### Numerical Descriptive Results
-
-
-
-### Inferential Results
-
 ## Conclusion and Discussion
 
