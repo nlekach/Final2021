@@ -1,7 +1,7 @@
 ---
 title: "Covid91 vaccine study Final2021"
-author: "Put your name here!"
-date: "put the date here"
+author: "Natalia Lekach"
+date: "May 3, 2021"
 output: 
   html_document:
     number_sections: true
@@ -30,6 +30,12 @@ A new  preventative vaccine (covid91) is under test in clinical trials. Given th
 
 # Methods
 
+To begin, we compared the effectiveness across the whole study population. This allowed us to compare the overall effectiveness with the separate sub-populations.
+  
+Then, we analyzed the effectiveness of four sub-populations: males, females, drug users and gay people. We used the dplyr command "filter" to create separate data frames for each of these populations.   
+  
+For each sub-population, we wanted to determine if being infected by Covid-19 was independent of receiving the vaccine or the placebo. If independent, we then determined the effectiveness of the vaccine. We displayed the results of each sub-population graphically, numerical and finally by completing the following inferential tests: chi-squared test and fisher exact test. For each, we used the fisher exact test to determine independence and then the odds ratio and effectiveness.
+
 ```{r}
 Males<-filter(FinalData,sex=="guy")
 Females<-filter(FinalData,sex=="gal")
@@ -37,7 +43,11 @@ Gay<-filter(FinalData,LGBTQ=="gay")
 UserDrugs<-filter(FinalData,DrugUser=="yes")
 ```
 
-# Overall Effectiveness 
+# Overall Effectiveness
+
+Null hypothesis: There is no difference in the COVID-19 infection rate between those that received the placebo and those that received the vaccine.   
+Alternate hypothesis:There is a difference in the COVID-19 infection rate between those that received the placebo and those that received the vaccine.
+  
 ```{r}
 barchartGC(~infected + treatment,data=FinalData, main="COVID infections by treatment type",xlab="Infection")
 barchartGC(~infected + treatment,data=FinalData, type="percent",main="Percent COVID Infections by treatment type", xlab="Infection")
@@ -63,8 +73,11 @@ fisher.test(OverallTable)
 Due to the small amount of participants who were diagnosed with COVID, the Fisher Exact Test is a better statistical test to interpret for this study. With a small p-value of 0.00001223, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between those those who receive the treatment and those that receive the placebo. The odds of getting COVID is 1.3418 times greater for those that received the placebo rather than the vaccine.
 Overall, this drug is between 53.99% and 60.56% effective.
   
-# Effectivness for Males
+# Effectiveness for Males
 
+Null hypothesis: There is no difference in the COVID-19 infection rate between males that received the placebo and males that received the vaccine.  
+Alternate hypothesis:There is a difference in the COVID-19 infection rate between males that received the placebo and males that received the vaccine.
+  
 ## Results
 
 ### Graphical Descriptive Results
@@ -94,11 +107,14 @@ chisqtestGC(MaleTable)
 fisher.test(MaleTable)
 ```
   
-With a small p-value of 0.0005, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between those those who receive the treatment and those that receive the placebo. The odds of males getting COVID is 0.678 times greater for those that received the placebo rather than the vaccine. 
-Overall, this drug is between 35.09% and 45.94% effective for males. This drug is less effective for males than for males and females combined.
+With a small p-value of 0.0005, we can reject the null hypothesis. This indicates that there is a significant difference in the COVID infection rate between those those who receive the treatment and those that receive the placebo. The odds of males getting COVID is 0.678 times greater for those that received the placebo rather than the vaccine. This means that one in this group is less likely to get COVID if they don't take the vaccine.
+Overall, this drug is between 35.09% and 45.94% effective for males. This drug is less effective for males than for the overall population.
   
-# Effectivness for Females
+# Effectiveness for Females
 
+Null hypothesis: There is no difference in the COVID-19 infection rate between females that received the placebo and females that received the vaccine.  
+Alternate hypothesis:There is a difference in the COVID-19 infection rate between females that received the placebo and females that received the vaccine.
+  
 ## Results
 
 ### Graphical Descriptive Results
@@ -108,7 +124,7 @@ barchartGC(~infected + treatment,data=Females, main= "COVID Infections of female
 barchartGC(~infected + treatment,data=Females, type="percent", main="Percent COVID Infections of females by treatment type", xlab="Infection")
 ```
   
-Of females that were diagnosed with COVID, about 2 times as many of them received the placebo. Of the females that were not diagnosed with COVID, almost and equal amount received the placebo and the vaccine. 
+Of females that were diagnosed with COVID, about 2 times as many of them received the placebo. Of the females that were not diagnosed with COVID, almost an equal amount received the placebo and the vaccine. 
     
 ### Numerical Descriptive Results
 
@@ -128,10 +144,13 @@ chisqtestGC(FemaleTable)
 fisher.test(FemaleTable)
 ```
   
-With a small p-value of 0.00000000000000022, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between the females who receive the treatment and those that receive the placebo. The odds of females getting COVID is 2.05 times greater for those that received the placebo rather than the vaccine. 
-Overall, this drug is between 63.15% and 70.99% effective for females. This drug is more effective for females than for males and females combined.
+With a small p-value of 0.00000000000000022, we can reject the null hypothesis. This indicates that there is a significant difference in the COVID infection rate between the females who receive the treatment and those that receive the placebo. The odds of females getting COVID is 2.05 times greater for those that received the placebo rather than the vaccine. One is more likely to get COVID if they do not receive the vaccine.
+Overall, this drug is between 63.15% and 70.99% effective for females. This drug is more effective for females that for the overall population.
 
-# Effectivness for Drug Users
+# Effectiveness for Drug Users
+
+Null hypothesis: There is no difference in the COVID-19 infection rate between people that are drug users that received the placebo and people that are drug users that received the vaccine.  
+Alternate hypothesis: There is a difference in the COVID-19 infection rate between people that are drug users that received the placebo and people that are drug users that received the vaccine.
 
 ## Results
 
@@ -163,11 +182,14 @@ fisher.test(DrugTable)
 ```
   
 With a small p-value of 0.002273, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between drug users who receive the treatment and drug users that receive the placebo. The odds of drug users getting COVID is 1.833 times greater for those that received the placebo rather than the vaccine. 
-Overall, this drug is between 54.96% and 73.63% effective for drug users This drug is slightly more effective for drug users than overall population. However, note that the confidence interval for the drug user population is wider than for the overall population.
+Overall, this drug is between 54.96% and 73.63% effective for drug users. This drug is slightly more effective for drug users than overall population. However, note that the confidence interval for the drug user population is wider than for the overall population.
   
-# Effectivness for Gay People
+# Effectiveness for Gay People
 
 Note: Rather than using the term LGBTQ for this dataset, I've chosen to use the term gay. This is because this data set just includes whether someone identifies as gay or straight, not if they identify as one of the other parts of the LGBTQ acronym.
+
+Null hypothesis: There is no difference in the COVID-19 infection rate between gay people that received the placebo and gay people that received the vaccine.  
+Alternate hypothesis:There is a difference in the COVID-19 infection rate between gay people that received the placebo and gay people that received the vaccine.
 
 ## Results
 
@@ -198,8 +220,27 @@ chisqtestGC(GayTable)
 fisher.test(GayTable)
 ```
   
-With a small p-value of 0.000005741, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between gay individuals who receive the treatment and gay individuals that receive the placebo. The odds of gay individuals getting COVID is 0.4013 times greater for those that received the placebo rather than the vaccine. 
+With a small p-value of 0.000005741, we can reject the null hypothesis. This indicates that there is a significant difference in COVID infection rate between gay individuals who receive the treatment and gay individuals that receive the placebo. The odds of gay individuals getting COVID is 0.4013 times greater for those that received the placebo rather than the vaccine. This means that one in this group is less likely to get COVID if they don't take the vaccine.
 Overall, this drug is only between 20.52% and 37.97% effective for gay individuals. This drug is much less effective for gay individuals than for the overall population.
   
-## Conclusion and Discussion
+# Conclusion and Discussion
+
+For the overall population and for the sub-populations, there is a statistically significant difference in the COVID-19 infection rate between those that received the placebo and those that received the vaccine. This is determined by the low p-values of all of the analyses. There is an extremely low chance that any of these results occurred by random chance. 
+
+While there is a statistically significant difference present in all the sub-groups and overall, there was a variety of different rates of effectiveness between the groups. Here is the summary of the confidence intervals of effectiveness:
+
+Overall:    53.99% - 60.56%   
+Males:      35.09% - 45.94%  
+Females:    63.15% - 70.99%   
+Drug Users: 54.96% - 73.63%  
+Gay People: 20.52% - 37.97%  
+
+The drug user and female sub-populations had the two highest rates of effectiveness. Both were more effective than the overall population effectiveness. The males and gay people had the two lowest rates effectiveness. Additionally, both were far below the effectiveness of the overall population. 
+
+If this drug was the only option, I would initially recommend that the overall population take this drug. Taking this drug does make one more likely to not get COVID. However, if other drugs are available, I would not recommend taking this drug - an effectiveness rate of 54-61% is not that high. Yet, after taking a closer look and analyzing the sub-populations, I would strongly caution males and gay people from taking this vaccine. Both had odds ratios below one and low effectiveness. Taking a vaccine that is under 50% effective would be risky - it means that they are more likely to get COVID if they take the vaccine.
+
+If no other drug was available, I would still recommend that females and drug users take this vaccine (that means that females, who may or may not be drug users and who do not identify as gay). However, if another drug with a higher effectiveness was available, I would likely recommend the other option.
+
+Note: While we made these conclusions, we must think about the presence of any confounding variables that could have impacted the experiment. For example, studies have shown that women are more cautious than men when it comes to COVID infection prevention. This may have made them less likely to be exposed to COVID during the trial. While we cannot test, nor confirm, the presence of confounding variables, we must take them into consideration when reflecting upon our results.
+
 
